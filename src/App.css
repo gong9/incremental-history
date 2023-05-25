@@ -1,0 +1,21 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  height: 400px;
+  background-color: #e5edc4;
+}
+
+.main textarea {
+  width: 400px;
+  height: 300px;
+}
+
+.main .btns {
+  width: 400px;
+}
+
+.main button {
+  margin: 0 5px;
+}
