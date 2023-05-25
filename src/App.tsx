@@ -1,5 +1,6 @@
 import { useState } from "react";
 import jsonPatch from "fast-json-patch";
+import { Button, Input } from 'antd'
 
 import "./App.css";
 import historyCcontroller from "./historyCcontroller";
@@ -34,15 +35,15 @@ const App = () => {
 
   return (
     <div className="main">
-      <h3>增量json历史记录测试</h3>
+      <h3 className="m-3">增量JSON历史记录测试</h3>
 
-      <textarea disabled value={JSON.stringify(json, null, 2)} />
+      <Input.TextArea disabled value={JSON.stringify(json, null, 2)} />
 
-      <div className="btns">
-        <button onClick={add}>添加</button>
-        <button>替换</button>
-        <button>删除</button>
-        <button onClick={undo}>撤销</button>
+      <div className="btns flex mt-5 justify-start">
+        <Button onClick={add} className='mr-2'>添加</Button>
+        <Button className='mr-2'>替换</Button>
+        <Button className='mr-2'>删除</Button>
+        <Button className='mr-2' onClick={undo}>撤销</Button>
       </div>
     </div>
   );
