@@ -1,5 +1,5 @@
 import jsonpatch, { Operation } from "fast-json-patch";
-
+import baseData from '../data.json'
 type HistoryDataType = {
   [k: string]: any;
 };
@@ -11,11 +11,7 @@ class HistoryCcontroller {
   private historyIndex: number;
 
   constructor(historyStackLength = 10) {
-    this.baseData = {
-      name: "John",
-      age: 30,
-      city: "New York",
-    };
+    this.baseData = baseData
     this.patch = [];
     this.historyStackLength = historyStackLength;
     this.historyIndex = 0;
