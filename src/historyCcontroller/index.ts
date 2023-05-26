@@ -1,65 +1,82 @@
+import jsonpatch, { Operation } from "fast-json-patch";
+
 type HistoryDataType = {
   [k: string]: any;
 };
 
-type PatchType = {
-  op: string;
-  path: string;
-  value: any;
-};
-
 class HistoryCcontroller {
-  public historyData: HistoryDataType;
-  public patch: PatchType[];
+  public baseData: HistoryDataType;
+  public patch: Operation[];
+  private historyStackLength: number;
   private historyIndex: number;
 
-  constructor() {
-    this.historyData = {
+  constructor(historyStackLength = 10) {
+    this.baseData = {
       name: "John",
       age: 30,
       city: "New York",
     };
     this.patch = [];
+    this.historyStackLength = historyStackLength;
     this.historyIndex = 0;
   }
 
-  public add(path: string, value: any) {
+  public get lastData() {
+    return jsonpatch.applyPatch({ ...this.baseData }, this.patch).newDocument;
+  }
+
+  private updateBaseData() {
+    this.historyIndex =
+      this.patch.length > this.historyStackLength
+        ? this.historyStackLength
+        : this.patch.length;
+
+    if (this.patch.length > this.historyStackLength) {
+      const currentPatch = this.patch.shift() as Operation;
+      this.baseData = jsonpatch.applyOperation(
+        { ...this.baseData },
+        currentPatch
+      ).newDocument;
+    }
+  }
+
+  public add(path: string, value: unknown) {
     this.patch.push({
       op: "add",
       path,
       value,
     });
 
-    this.historyIndex++;
+    this.updateBaseData();
   }
 
-  public replace(path: string, value: any) {
+  public replace(path: string, value: unknown) {
     this.patch.push({
       op: "replace",
       path,
       value,
     });
 
-    this.historyIndex++;
+    this.updateBaseData();
   }
 
   public delete(path: string) {
     this.patch.push({
-      op: "delete",
+      op: "remove",
       path,
-      value: null,
     });
 
-    this.historyIndex++;
+    this.updateBaseData();
   }
 
   public undo() {
     if (this.historyIndex > 0) {
-      const currentPatch = this.patch.slice(0, this.historyIndex);
-
-      return currentPatch;
+      const currentPatch = this.patch.slice(0, this.historyIndex - 1);
+      this.historyIndex -= 1;
+      return jsonpatch.applyPatch({ ...this.baseData }, currentPatch)
+        .newDocument;
     } else {
-      return [];
+      return { ...this.baseData };
     }
   }
 }

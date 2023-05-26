@@ -1,12 +1,11 @@
 import { useState } from "react";
-import jsonPatch from "fast-json-patch";
 import { Button, Input } from 'antd'
 
 import "./App.css";
 import historyCcontroller from "./historyCcontroller";
 
 const App = () => {
-  const [json, setJson] = useState(historyCcontroller.historyData);
+  const [json, setJson] = useState(historyCcontroller.baseData);
 
   const generateRandomString = (length: number) => {
     let result = "";
@@ -20,17 +19,18 @@ const App = () => {
   };
 
   const add = () => {
-    historyCcontroller.add(`/${generateRandomString(5)}`, "新加的");
-    setJson({
-      ...jsonPatch.applyPatch(historyCcontroller.historyData, historyCcontroller.patch as any)
-        .newDocument,
-    });
+    historyCcontroller.add(`/${generateRandomString(10)}`, "新加的");
+
+    setJson(
+      historyCcontroller.lastData
+    )
   };
+
   const undo = () => {
-    setJson({
-      ...jsonPatch.applyPatch(historyCcontroller.historyData, historyCcontroller.undo() as any)
-        .newDocument,
-    });
+
+    setJson(
+      historyCcontroller.undo()
+    );
   };
 
   return (
