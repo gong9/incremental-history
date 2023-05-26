@@ -31,11 +31,15 @@ class HistoryCcontroller {
     return this.historyIndex === this.patch.length
   }
 
-  private updateBaseData() {
+  private resetHistoryIndex() {
     this.historyIndex
-      = this.patch.length > this.historyStackLength
+    = this.patch.length > this.historyStackLength
         ? this.historyStackLength
         : this.patch.length
+  }
+
+  private updateBaseData() {
+    this.resetHistoryIndex()
 
     if (this.patch.length > this.historyStackLength) {
       const currentPatch = this.patch.shift() as Operation
@@ -94,7 +98,7 @@ class HistoryCcontroller {
         .newDocument
     }
     else {
-      message.warning(`只能回退${this.historyStackLength}步`)
+      message.warning('You can\'t undo anymore')
       return { ...this.baseData }
     }
   }
