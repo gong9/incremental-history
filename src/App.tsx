@@ -4,25 +4,28 @@ import { Button, Input } from 'antd'
 import './App.css'
 import historyCcontroller from './historyCcontroller'
 import { generateRandomString } from './utils'
+import bigBaseData from './data.json'
 
 function App() {
-  const [json] = useState(historyCcontroller.baseData)
+  const [json, setJson] = useState({})
 
   const add = () => {
     historyCcontroller.add(`/${generateRandomString(10)}`, '新加的')
 
-    console.log(historyCcontroller.lastData)
+    setJson(historyCcontroller.lastData)
   }
 
   const undo = () => {
-    console.log(historyCcontroller.undo())
+    setJson(historyCcontroller.undo())
+  }
+
+  const toggle = () => {
+    setJson(bigBaseData)
   }
 
   return (
     <div className="main">
-      <h3 className="m-3">增量JSON历史记录测试 「3M数据」</h3>
-
-      <div>渲染性能不理想,可打开控制台查看</div>
+      <h3 className="m-3">高性能增量JSON历史记录测试 「base」</h3>
 
       <Input.TextArea disabled value={JSON.stringify(json, null, 2)} />
 

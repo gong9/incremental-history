@@ -1,6 +1,6 @@
 import type { Operation } from 'fast-json-patch'
 import jsonpatch from 'fast-json-patch'
-import baseData from '../data.json'
+import { message } from 'antd'
 
 interface HistoryDataType {
   [k: string]: unknown
@@ -13,14 +13,22 @@ class HistoryCcontroller {
   private historyIndex: number
 
   constructor(historyStackLength = 10) {
-    this.baseData = baseData
+    this.baseData = {}
     this.patch = []
     this.historyStackLength = historyStackLength
     this.historyIndex = 0
   }
 
+  public setBaseData(data: HistoryDataType) {
+    this.baseData = jsonpatch.deepClone(data)
+  }
+
   public get lastData() {
     return jsonpatch.applyPatch({ ...this.baseData }, this.patch).newDocument
+  }
+
+  private get isTopStack() {
+    return this.historyIndex === this.patch.length
   }
 
   private updateBaseData() {
@@ -38,7 +46,14 @@ class HistoryCcontroller {
     }
   }
 
+  private changeHistoryStack() {
+    if (!this.isTopStack)
+      this.patch = this.patch.slice(0, this.historyIndex)
+  }
+
   public add(path: string, value: unknown) {
+    this.changeHistoryStack()
+
     this.patch.push({
       op: 'add',
       path,
@@ -49,6 +64,8 @@ class HistoryCcontroller {
   }
 
   public replace(path: string, value: unknown) {
+    this.changeHistoryStack()
+
     this.patch.push({
       op: 'replace',
       path,
@@ -59,6 +76,8 @@ class HistoryCcontroller {
   }
 
   public delete(path: string) {
+    this.changeHistoryStack()
+
     this.patch.push({
       op: 'remove',
       path,
@@ -75,9 +94,10 @@ class HistoryCcontroller {
         .newDocument
     }
     else {
+      message.warning(`只能回退${this.historyStackLength}步`)
       return { ...this.baseData }
     }
   }
 }
 
-export default new HistoryCcontroller()
+export default new HistoryCcontroller(10)
