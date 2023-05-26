@@ -1,32 +1,32 @@
-import { useState } from "react";
-import { Button, Input } from "antd";
+import { useState } from 'react'
+import { Button, Input } from 'antd'
 
-import "./App.css";
-import historyCcontroller from "./historyCcontroller";
+import './App.css'
+import historyCcontroller from './historyCcontroller'
 
-const App = () => {
-  const [json, setJson] = useState(historyCcontroller.baseData);
+function App() {
+  const [json] = useState(historyCcontroller.baseData)
 
   const generateRandomString = (length: number) => {
-    let result = "";
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
+    let result = ''
+    const characters
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++)
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+
+    return result
+  }
 
   const add = () => {
-    historyCcontroller.add(`/${generateRandomString(10)}`, "新加的");
+    historyCcontroller.add(`/${generateRandomString(10)}`, '新加的')
 
-    console.log(historyCcontroller.lastData);
-  };
+    console.log(historyCcontroller.lastData)
+  }
 
   const undo = () => {
-    console.log(historyCcontroller.undo());
-  };
+    console.log(historyCcontroller.undo())
+  }
 
   return (
     <div className="main">
@@ -47,7 +47,7 @@ const App = () => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
