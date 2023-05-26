@@ -32,7 +32,7 @@ const App = () => {
     <div className="main">
       <h3 className="m-3">增量JSON历史记录测试 「3M数据」</h3>
 
-      <div>react渲染性能不理想,可打卡控制台查看</div>
+      <div>渲染性能不理想,可打开控制台查看</div>
 
       <Input.TextArea disabled value={JSON.stringify(json, null, 2)} />
 
