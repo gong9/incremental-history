@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Card, Input } from 'antd'
 
-import historyCcontroller from '../../historyCcontroller'
+import historyCcontroller from '../../historyController'
 import { generateRandomString } from '../../utils'
 import './index.css'
 

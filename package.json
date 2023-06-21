@@ -13,9 +13,9 @@
   "dependencies": {
     "antd": "^5.5.1",
     "fast-json-patch": "^3.1.1",
-    "immer": "^10.0.2",
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.21",
+    "poor-utils-pro": "^2.1.0",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

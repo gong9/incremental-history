@@ -17,6 +17,7 @@ export interface CardProps {
   text: string
   moveCard: (id: string, to: number) => void
   findCard: (id: string) => { index: number }
+  addRecord: () => void
 }
 
 interface Item {
@@ -29,6 +30,7 @@ export const Card: FC<CardProps> = memo(({
   text,
   moveCard,
   findCard,
+  addRecord,
 }) => {
   const originalIndex = findCard(id).index
   const [{ isDragging }, drag] = useDrag(
@@ -41,8 +43,15 @@ export const Card: FC<CardProps> = memo(({
       end: (item, monitor) => {
         const { id: droppedId, originalIndex } = item
         const didDrop = monitor.didDrop()
-        if (!didDrop)
-          moveCard(droppedId, originalIndex)
+
+        if (!didDrop) {
+          (
+            moveCard(droppedId, originalIndex)
+          )
+        }
+        else {
+          addRecord()
+        }
       },
     }),
     [id, originalIndex, moveCard],

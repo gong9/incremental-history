@@ -1,8 +1,9 @@
 import update from 'immutability-helper'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { Button } from 'antd'
 
+import historyCcontroller from '../../historyController'
 import { Card } from './Card'
 import { ItemTypes } from './ItemTypes'
 
@@ -48,6 +49,10 @@ const ITEMS = [
 export default memo(() => {
   const [cards, setCards] = useState(ITEMS)
 
+  useEffect(() => {
+    historyCcontroller.setBaseData(ITEMS)
+  }, [])
+
   const findCard = useCallback(
     (id: string) => {
       const card = cards.filter(c => `${c.id}` === id)[0] as {
@@ -65,19 +70,29 @@ export default memo(() => {
   const moveCard = useCallback(
     (id: string, atIndex: number) => {
       const { card, index } = findCard(id)
-      setCards(
-        update(cards, {
-          $splice: [
-            [index, 1],
-            [atIndex, 0, card],
-          ],
-        }),
-      )
+      const nextState = update(cards, {
+        $splice: [
+          [index, 1],
+          [atIndex, 0, card],
+        ],
+      })
+
+      setCards(nextState)
     },
     [findCard, cards, setCards],
   )
 
   const [, drop] = useDrop(() => ({ accept: ItemTypes.CARD }))
+
+  const undo = () => {
+    console.log(historyCcontroller.undo())
+    setCards(historyCcontroller.undo() as any)
+  }
+
+  const addRecord = () => {
+    historyCcontroller.addRecord(cards)
+  }
+
   return (
     <div ref={drop} style={style}>
       <div>
@@ -88,13 +103,13 @@ export default memo(() => {
           text={card.text}
           moveCard={moveCard}
           findCard={findCard}
+          addRecord={addRecord}
         />
       ))}
       </div>
 
       <div className='mt-3'>
-        <Button className='mr-3'>撤消</Button>
-        <Button>撤消</Button>
+        <Button className='mr-3' onClick={undo}>撤消</Button>
       </div>
     </div>
   )
